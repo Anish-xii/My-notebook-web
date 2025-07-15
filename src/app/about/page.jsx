@@ -29,8 +29,9 @@ const AboutPage = () => {
 
       {/* Description */}
       <p className="max-w-2xl text-lg md:text-xl leading-relaxed mb-16">
-      Welcome to my DSA notebook — a place where I document the problems I’ve solved. This page is for me to search through my solutions quickly, revise anytime, anywhere, and avoid any noise. Only I can add or edit content here, but you're welcome to explore.
+        Welcome to my DSA notebook — a place where I document the problems I’ve solved. This page is for me to search through my solutions quickly, revise anytime, anywhere, and avoid any noise. Only I can add or edit content here, but you&apos;re welcome to explore.
       </p>
+      
 
       {/* Social Links */}
       <div className="flex gap-10">
