@@ -74,7 +74,7 @@ const HeroSection = () => {
       />
 
       {/* Text Content */}
-      <div className="relative z-20 flex flex-col items-center justify-center h-full text-center px-6">
+      <div className="relative z-20 flex flex-col items-center justify-center h-full text-center px-6 md:translate-y-0 translate-y-[-2rem]">
         <h1
           ref={textRef}
           className="text-4xl md:text-6xl font-extrabold mb-4 transition-all duration-300"
@@ -93,7 +93,8 @@ const HeroSection = () => {
       </div>
 
       {/* Bottom Fade */}
-      <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-b from-transparent to-white pointer-events-none z-20" />
+      <div className="absolute bottom-0 left-0 w-full h-16 md:h-32 bg-gradient-to-b from-transparent to-white pointer-events-none z-20" />
+
     </section>
   );
 };
