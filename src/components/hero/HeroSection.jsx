@@ -74,7 +74,7 @@ const HeroSection = () => {
       />
 
       {/* Text Content */}
-      <div className="relative z-20 flex flex-col items-center justify-center h-full text-center px-6 md:translate-y-0 translate-y-[-2rem]">
+      <div className="relative z-20 flex flex-col items-center justify-center h-full text-center px-6">
         <h1
           ref={textRef}
           className="text-4xl md:text-6xl font-extrabold mb-4 transition-all duration-300"
