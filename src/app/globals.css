@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    font-family: 'Inter', sans-serif;
+  }
+
+/* Hide scrollbars but keep scroll functionality */
+body::-webkit-scrollbar {
+  display: none;
+}
+body {
+  scrollbar-width: none;          /* Firefox */
+  -ms-overflow-style: none;       /* IE and Edge */
+}
+  
