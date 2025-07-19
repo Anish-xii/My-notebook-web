@@ -1,8 +1,8 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'Home',
-  description: 'My Tailwind Next.js App',
+  title: 'DSA-memo',
+  description: 'DSA notes for quick revision',
 };
 
 export default function RootLayout({ children }) {
@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
 
           <footer className="w-full bg-gray-100 border-t">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 text-sm text-gray-500 text-center">
-              © {new Date().getFullYear()} My App. All rights reserved.
+              © {new Date().getFullYear()} My Notebook. All rights reserved.
             </div>
           </footer>
         </div>
