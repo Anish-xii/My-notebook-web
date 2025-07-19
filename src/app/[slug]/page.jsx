@@ -11,29 +11,9 @@ import QuestionHeader from "@/components/question/QuestionHeader";
 import AnswerCode from "@/components/answer/AnswerCode";
 import NotesSection from "@/components/notes/NotesSection";
 
-// ✅ Modern Loading Placeholder
-const LoadingPlaceholder = ({ label }) => {
-  return (
-    <div className="bg-white p-4 rounded shadow h-full flex items-center justify-center text-gray-400 text-sm font-medium">
-      {label}
-      <span className="ml-1 animate-blink">...</span>
-      <style jsx>{`
-        @keyframes blink {
-          0%,
-          100% {
-            opacity: 0.2;
-          }
-          50% {
-            opacity: 1;
-          }
-        }
-        .animate-blink {
-          animation: blink 1.2s infinite;
-        }
-      `}</style>
-    </div>
-  );
-};
+import SkeletonQuestionHeader from "@/components/skeleton/SkeletonQuestionHeader";
+import SkeletonAnswerCode from "@/components/skeleton/SkeletonAnswerCode";
+import SkeletonNotesSection from "@/components/skeleton/SkeletonNotesSection";
 
 const QuestionPage = () => {
   const { slug } = useParams();
@@ -45,12 +25,25 @@ const QuestionPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
+  useEffect(() => {
+    const cached = sessionStorage.getItem(`question-${slug}`);
+    if (cached) {
+      setQuestionData(JSON.parse(cached));
+      setLoading(false);
+      return;
+    }
+
     const fetchQuestion = async () => {
       try {
         const q = query(collection(db, "questions"), where("slug", "==", slug));
         const snapshot = await getDocs(q);
         if (!snapshot.empty) {
-          setQuestionData(snapshot.docs[0].data());
+          const data = snapshot.docs[0].data();
+          setQuestionData(data);
+          sessionStorage.setItem(`question-${slug}`, JSON.stringify(data));
         }
       } catch (err) {
         console.error("Error fetching question:", err);
@@ -82,13 +75,13 @@ const QuestionPage = () => {
         Back
       </button>
 
-      {/* Mobile Layout */}
+      {/* 📱 Mobile View */}
       <div className="md:hidden pt-6 px-4 pb-4 h-full overflow-y-auto space-y-4">
         {loading ? (
           <>
-            <LoadingPlaceholder label="Loading question" />
-            <LoadingPlaceholder label="Loading code" />
-            <LoadingPlaceholder label="Loading notes" />
+            <SkeletonQuestionHeader />
+            <SkeletonAnswerCode />
+            <SkeletonNotesSection />
           </>
         ) : (
           <>
@@ -99,13 +92,13 @@ const QuestionPage = () => {
         )}
       </div>
 
-      {/* Desktop Layout */}
+      {/* 💻 Desktop Split View */}
       <div className="hidden md:flex h-full pt-6 px-4 gap-2">
         <PanelGroup direction="horizontal" className="w-full h-full gap-2">
           <Panel defaultSize={60} minSize={20} maxSize={70}>
             <div className="h-full overflow-y-auto">
               {loading ? (
-                <LoadingPlaceholder label="Loading question" />
+                <SkeletonQuestionHeader />
               ) : (
                 <QuestionHeader title={title} description={description} topics={tags} />
               )}
@@ -118,11 +111,7 @@ const QuestionPage = () => {
             <PanelGroup direction="vertical" className="h-full gap-2">
               <Panel defaultSize={60} minSize={30} maxSize={90}>
                 <div className="h-full overflow-y-auto">
-                  {loading ? (
-                    <LoadingPlaceholder label="Loading code" />
-                  ) : (
-                    <AnswerCode code={code} />
-                  )}
+                  {loading ? <SkeletonAnswerCode /> : <AnswerCode code={code} />}
                 </div>
               </Panel>
 
@@ -130,11 +119,7 @@ const QuestionPage = () => {
 
               <Panel defaultSize={40} minSize={10} maxSize={70}>
                 <div className="h-full overflow-y-auto">
-                  {loading ? (
-                    <LoadingPlaceholder label="Loading notes" />
-                  ) : (
-                    <NotesSection notes={notes} />
-                  )}
+                  {loading ? <SkeletonNotesSection /> : <NotesSection notes={notes} />}
                 </div>
               </Panel>
             </PanelGroup>

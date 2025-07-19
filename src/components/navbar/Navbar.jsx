@@ -38,7 +38,6 @@ const Navbar = () => {
           My NoteBook
         </a>
 
-        {/* Desktop Links */}
         <div className="hidden md:flex space-x-6 lg:space-x-8 font-medium">
           <a href="/" className={`transition-colors duration-300 ${linkColor}`}>
             Home
@@ -48,7 +47,7 @@ const Navbar = () => {
           </a>
         </div>
 
-        {/* Mobile Menu Toggle */}
+        {/* Mobile Menu */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
           className={`md:hidden transition-all duration-300 ${
@@ -59,7 +58,7 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* Mobile Dropdown */}
+      {/* Mobile */}
       {menuOpen && (
         <div
           className={`md:hidden mt-2 rounded-xl transition-all duration-300 overflow-hidden bg-white shadow-md border border-gray-200 ${

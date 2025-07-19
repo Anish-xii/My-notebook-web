@@ -20,10 +20,9 @@ const CardList = ({ filterTag }) => {
     fetchQuestions();
   }, []);
 
-  // ✅ Filter based on tag or show only favourites
   const filteredQuestions = filterTag
     ? questions.filter((q) => Array.isArray(q.tags) && q.tags.includes(filterTag))
-    : questions.filter((q) => q.isFavourite); // show only favourites by default
+    : questions.filter((q) => q.isFavourite); 
 
   return (
     <div className="w-full max-h-[600px] overflow-y-auto flex flex-col gap-4 pr-2 scrollbar-thin scrollbar-thumb-gray-300">
@@ -40,7 +39,7 @@ const CardList = ({ filterTag }) => {
             title={q.title}
             heading={q.description}
             topics={q.tags}
-            isFavourite={q.isFavourite} // ✅ pass actual value
+            isFavourite={q.isFavourite} 
           />
         </Link>
       ))}

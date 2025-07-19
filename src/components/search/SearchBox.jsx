@@ -6,7 +6,6 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 const tagList = [
-  // merge all options from WritePage tagOptions here
   "Arrays", "Strings", "Linked List", "Doubly Linked List", "Circular Linked List",
   "Stack", "Queue", "Deque", "Hash Table / Map", "Set", "Heap / Priority Queue",
   "Tree (Binary Tree, BST)", "Trie", "Segment Tree", "Binary Indexed Tree (Fenwick Tree)",
@@ -47,11 +46,11 @@ const SearchBox = () => {
       .filter((q) => q.title.toLowerCase().includes(lower))
       .map((q) => ({ type: "question", label: q.title, slug: q.slug }));
 
-    setSuggestions([...matchedTags, ...matchedQuestions].slice(0, 5)); // max 5 suggestions
+    setSuggestions([...matchedTags, ...matchedQuestions].slice(0, 5)); 
   }, [input, questions]);
 
   const handleSelect = (item) => {
-    setInput(""); // ✅ Clear the search bar before navigating
+    setInput(""); 
   
     if (item.type === "tag") {
       router.push(`/?category=${encodeURIComponent(item.label)}`);

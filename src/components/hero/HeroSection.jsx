@@ -20,14 +20,12 @@ const HeroSection = () => {
       if (scrolled && !scrolledPast) {
         setScrolledPast(true);
 
-        // Background parallax effect
         gsap.to(bgRef.current, {
           y: -50,
           duration: 0.6,
           ease: "power2.out",
         });
 
-        // Overlay dark fade
         gsap.to(overlayRef.current, {
           backgroundColor: "rgba(0, 0, 0, 0.05)",
           duration: 0.3,
@@ -36,14 +34,12 @@ const HeroSection = () => {
       } else if (!scrolled && scrolledPast) {
         setScrolledPast(false);
 
-        // Reset background position
         gsap.to(bgRef.current, {
           y: 0,
           duration: 0.6,
           ease: "power2.out",
         });
 
-        // Remove overlay
         gsap.to(overlayRef.current, {
           backgroundColor: "rgba(0, 0, 0, 0)",
           duration: 0.3,
@@ -61,7 +57,7 @@ const HeroSection = () => {
       ref={heroRef}
       className="relative h-[70vh] w-full bg-gradient-to-br from-blue-100 to-white text-gray-900 pt-24 overflow-hidden"
     >
-      {/* Decorative Polka Dot BG */}
+      {/* Polka Dot BG */}
       <div
         ref={bgRef}
         className="absolute inset-0 pointer-events-none opacity-30 bg-[radial-gradient(#6366f1_2px,transparent_1px)] [background-size:20px_20px] z-0"
@@ -73,7 +69,7 @@ const HeroSection = () => {
         className="absolute inset-0 bg-black/0 transition-colors duration-300 z-10 pointer-events-none"
       />
 
-      {/* Text Content */}
+      {/* Text */}
       <div className="relative z-20 flex flex-col items-center justify-center h-full text-center px-6">
         <h1
           ref={textRef}

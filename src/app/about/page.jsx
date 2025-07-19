@@ -19,7 +19,7 @@ const AboutPage = () => {
         </Link>
       </div>
 
-      {/* Heading */}
+      
       <h1
         className="text-5xl md:text-6xl mb-10"
         style={{ fontFamily: "'Dancing Script', cursive" }}
@@ -27,13 +27,11 @@ const AboutPage = () => {
         Hi, I am Anish
       </h1>
 
-      {/* Description */}
       <p className="max-w-2xl text-lg md:text-xl leading-relaxed mb-16">
         Welcome to my DSA notebook — a place where I document the problems I’ve solved. This page is for me to search through my solutions quickly, revise anytime, anywhere, and avoid any noise. Only I can add or edit content here, but you&apos;re welcome to explore.
       </p>
       
 
-      {/* Social Links */}
       <div className="flex gap-10">
         <a
           href="https://uk.linkedin.com/in/anish-biswas-0740aa2b1"

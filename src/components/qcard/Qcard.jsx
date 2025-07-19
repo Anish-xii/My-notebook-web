@@ -4,11 +4,10 @@ const Qcard = ({
   title = "Two Sum",
   heading = "Find indices of two numbers that add up to target.",
   topics = ["Array", "HashMap"],
-  isFavourite = false, // ✅ default false
+  isFavourite = false, 
 }) => {
   return (
     <div className="w-full border border-gray-200 rounded-xl p-3 sm:p-4 bg-white hover:shadow transition duration-200 space-y-1 sm:space-y-2">
-      {/* Title + Bookmark */}
       <div className="flex justify-between items-start">
         <h3 className="text-base sm:text-lg font-semibold text-gray-900 leading-tight mb-3 sm:mb-1">
           {title}
@@ -25,7 +24,7 @@ const Qcard = ({
         )}
       </div>
 
-      {/* Heading / Summary (only on sm and up) */}
+      {/* Summary (only on sm and up) */}
       <p
         className="text-sm text-gray-600 line-clamp-2 overflow-hidden text-ellipsis whitespace-normal sm:block"
       >

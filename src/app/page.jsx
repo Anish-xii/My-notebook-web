@@ -22,13 +22,11 @@ export default function Home() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  // Handle category from query param
   useEffect(() => {
     const cat = searchParams.get("category");
     if (cat) {
       setSelectedCategory(cat);
   
-      // Trigger same animation as selecting category manually
       gsap.to(catRef.current, {
         y: -40,
         opacity: 0,
@@ -62,7 +60,6 @@ export default function Home() {
   }, [searchParams]);
   
 
-  // Animate when a category is selected
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
     router.push(`/?category=${category}`, { scroll: false });
@@ -77,21 +74,18 @@ export default function Home() {
       onComplete: () => {
         setSearchMode(true);
 
-        // Animate question section in
         gsap.fromTo(
           questionSectionRef.current,
           { y: 50, opacity: 0 },
           { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" }
         );
 
-        // Animate back button
         gsap.fromTo(
           backButtonRef.current,
           { y: -10, opacity: 0 },
           { y: 0, opacity: 1, duration: 0.4, ease: "power2.out", delay: 0.3 }
         );
 
-        // Scroll to question section
         setTimeout(() => {
           questionSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
         }, 100);
@@ -141,7 +135,6 @@ export default function Home() {
     }, 100);
   };
 
-  // Mobile progress bar trigger
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => setShowFloating(entry.isIntersecting),
