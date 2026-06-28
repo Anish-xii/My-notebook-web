@@ -1,163 +1,192 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
+import React, { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
-const ProgCard = ({ goal = 400, showCompact = false }) => {
-  const [totalSolved, setTotalSolved] = useState(0); // default: 0
+const topicCategories = [
+  {
+    id: "array_hashing",
+    label: "Array & Hashing",
+    matchTags: ["Arrays", "Hash Table / Map"],
+  },
+  {
+    id: "two_pointers",
+    label: "Two Pointers",
+    matchTags: ["Two Pointers"],
+  },
+  {
+    id: "stack",
+    label: "Stack",
+    matchTags: ["Stack"],
+  },
+  {
+    id: "sliding_window",
+    label: "Sliding Window",
+    matchTags: ["Sliding Window"],
+  },
+  {
+    id: "binary_search",
+    label: "Binary Search",
+    matchTags: ["Binary Search"],
+  },
+  {
+    id: "linked_list",
+    label: "Linked List",
+    matchTags: [
+      "Linked List",
+      "Doubly Linked List",
+      "Circular Linked List",
+    ],
+  },
+  {
+    id: "tree",
+    label: "Tree",
+    matchTags: ["Tree (Binary Tree, BST)", "Trie"],
+  },
+  {
+    id: "backtracking",
+    label: "Backtracking",
+    matchTags: ["Backtracking"],
+  },
+  {
+    id: "graph",
+    label: "Graph",
+    matchTags: ["Graph"],
+  },
+  {
+    id: "heap_pq",
+    label: "Heap",
+    matchTags: ["Heap / Priority Queue"],
+  },
+];
+
+export default function ProgCard({ showCompact = false }) {
+  const router = useRouter();
+
+  const [topicCounts, setTopicCounts] = useState({});
+  const [totalSolved, setTotalSolved] = useState(0);
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
-    const fetchTotalSolved = async () => {
+    const fetchQuestions = async () => {
       try {
-        const docSnap = await getDoc(doc(db, "meta", "stats"));
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          setTotalSolved(data.totalQuestions || 0);
-        } else {
-          console.warn("📭 No stats document found.");
-        }
+        const snapshot = await getDocs(collection(db, "questions"));
+        const questions = snapshot.docs.map((doc) => doc.data());
+
+        setTotalSolved(questions.length);
+
+        const counts = {};
+
+        topicCategories.forEach((topic) => {
+          counts[topic.id] = 0;
+        });
+
+        questions.forEach((question) => {
+          const tags = question.tags || [];
+
+          topicCategories.forEach((topic) => {
+            if (topic.matchTags.some((tag) => tags.includes(tag))) {
+              counts[topic.id]++;
+            }
+          });
+        });
+
+        setTopicCounts(counts);
       } catch (err) {
-        console.error("❌ Error fetching total solved:", err);
+        console.error("Failed to fetch pattern counts:", err);
       }
     };
 
-    fetchTotalSolved();
+    fetchQuestions();
   }, []);
 
-  const circleRadius = 45;
-  const circleCircumference = 2 * Math.PI * circleRadius;
-  const circleProgressPercent = Math.min((totalSolved / goal) * 100, 100);
-  const strokeOffset =
-    circleCircumference - (circleProgressPercent / 100) * circleCircumference;
+  const sortedTopics = useMemo(() => {
+    return topicCategories
+      .map((topic) => ({
+        ...topic,
+        count: topicCounts[topic.id] || 0,
+      }))
+      .filter((topic) => topic.count > 0)
+      .sort((a, b) => b.count - a.count);
+  }, [topicCounts]);
 
-  const milestones = [100, 200, 300, 400];
+  const visibleTopics = expanded
+    ? sortedTopics
+    : sortedTopics.slice(0, 5);
 
+  const handleCategoryClick = (label) => {
+    router.push(`/?category=${encodeURIComponent(label)}`, {
+      scroll: false,
+    });
+  };
+
+  // Mobile
   if (showCompact) {
     return (
-      <div
-        className={`
-          fixed bottom-20 right-5 z-50 w-20 h-20
-          bg-white shadow-xl rounded-full border border-gray-300
-          flex items-center justify-center
-          transition-all duration-500 ease-in-out
-          opacity-100 scale-100
-        `}
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        className="fixed bottom-20 right-5 z-50 rounded-full border bg-white px-4 py-3 text-sm font-semibold shadow-lg"
       >
-        <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-          <circle
-            cx="50"
-            cy="50"
-            r={circleRadius}
-            stroke="#e5e7eb"
-            strokeWidth="10"
-            fill="none"
-          />
-          <circle
-            cx="50"
-            cy="50"
-            r={circleRadius}
-            stroke="#10b981"
-            strokeWidth="10"
-            fill="none"
-            strokeDasharray={circleCircumference}
-            strokeDashoffset={strokeOffset}
-            strokeLinecap="round"
-            className="transition-all duration-700"
-          />
-        </svg>
-        <div className="absolute inset-0 flex items-center justify-center text-[13px] font-bold text-gray-800">
-          {totalSolved}
-        </div>
-      </div>
+        {totalSolved}
+      </button>
     );
   }
 
   return (
-    <div className="hidden lg:block w-full rounded-3xl p-6 bg-white border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-500">
-      <div className="flex flex-col items-center mb-8">
-        <div className="relative w-28 h-28 hover:scale-105 transition-transform duration-300">
-          <svg
-            className="w-full h-full transform -rotate-90"
-            viewBox="0 0 100 100"
-          >
-            <circle
-              cx="50"
-              cy="50"
-              r={circleRadius}
-              stroke="#e5e7eb"
-              strokeWidth="10"
-              fill="none"
-            />
-            <circle
-              cx="50"
-              cy="50"
-              r={circleRadius}
-              stroke="#10b981"
-              strokeWidth="10"
-              fill="none"
-              strokeDasharray={circleCircumference}
-              strokeDashoffset={strokeOffset}
-              strokeLinecap="round"
-              className="transition-all duration-700"
-            />
-          </svg>
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-2xl font-semibold text-gray-800">
-              {totalSolved}
-            </span>
-            <span className="text-xs text-emerald-600">/ {goal}</span>
-          </div>
-        </div>
+    <aside className="hidden lg:block overflow-hidden rounded-2xl border border-gray-200 bg-white">
+      {/* Header */}
+      <div className="flex items-center justify-between border-b px-4 py-3">
+        <h3 className="text-sm font-semibold text-gray-900">
+          Patterns
+        </h3>
+
+        <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-700">
+          {totalSolved}
+        </span>
       </div>
 
-      <div className="space-y-4">
-        {milestones.map((milestone, index) => {
-          const prev = index === 0 ? 0 : milestones[index - 1];
-          const range = milestone - prev;
-          const currentBlockSolved = totalSolved - prev;
-
-          const isCompleted = totalSolved >= milestone;
-          const isCurrent = totalSolved >= prev && totalSolved < milestone;
-          const progressPercent = isCompleted
-            ? 100
-            : isCurrent
-            ? (currentBlockSolved / range) * 100
-            : 0;
-
-          return (
-            <div
-              key={milestone}
-              className="flex items-center gap-3 group transition-all duration-300"
+      {/* Topics */}
+      <div
+        className={`py-2 ${
+          expanded ? "max-h-80 overflow-y-auto" : ""
+        }`}
+      >
+        {visibleTopics.length === 0 ? (
+          <p className="px-4 py-6 text-sm text-gray-400">
+            No patterns explored yet.
+          </p>
+        ) : (
+          visibleTopics.map((topic) => (
+            <button
+              key={topic.id}
+              onClick={() => handleCategoryClick(topic.label)}
+              className="flex w-full items-center justify-between px-4 py-2.5 text-left transition-colors hover:bg-gray-50"
             >
-              <span className="w-10 text-sm text-gray-700 font-mono">
-                {milestone}
+              <span className="truncate text-sm text-gray-700">
+                {topic.label}
               </span>
 
-              <div className="flex-1 h-3 rounded-full bg-gray-100 relative overflow-hidden border border-gray-300 group-hover:border-emerald-400">
-                <div
-                  className={`h-full transition-all duration-500 ${
-                    isCompleted
-                      ? "bg-gray-400"
-                      : isCurrent
-                      ? "bg-emerald-500"
-                      : "bg-transparent"
-                  }`}
-                  style={{ width: `${progressPercent}%` }}
-                />
-              </div>
-
-              <div className="w-5 h-5 flex items-center justify-center">
-                {isCompleted && (
-                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                )}
-              </div>
-            </div>
-          );
-        })}
+              <span className="ml-4 text-sm font-semibold text-gray-900">
+                {topic.count}
+              </span>
+            </button>
+          ))
+        )}
       </div>
-    </div>
-  );
-};
 
-export default ProgCard;
+      {/* Footer */}
+      {sortedTopics.length > 5 && (
+        <button
+          onClick={() => setExpanded((prev) => !prev)}
+          className="w-full border-t px-4 py-3 text-xs font-medium text-gray-500 transition-colors hover:text-gray-900"
+        >
+          {expanded
+            ? "Show less"
+            : `Show all (${sortedTopics.length})`}
+        </button>
+      )}
+    </aside>
+  );
+}
