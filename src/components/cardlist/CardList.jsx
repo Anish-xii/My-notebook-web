@@ -5,7 +5,6 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import SkeletonQcard from "../skeleton/SkeletonQcard"; 
 
-// Bring in the same category map used in ProgCard
 const topicCategories = [
   { id: "array_hashing", label: "Array & Hashing", matchTags: ["Arrays", "Hash Table / Map"] },
   { id: "two_pointers", label: "Two Pointers", matchTags: ["Two Pointers"] },

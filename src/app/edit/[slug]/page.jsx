@@ -52,7 +52,7 @@ const EditPage = () => {
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [fetchingData, setFetchingData] = useState(true);
   
-  const [docId, setDocId] = useState(null); // Keep track of the Firestore document ID
+  const [docId, setDocId] = useState(null); 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [code, setCode] = useState("");
@@ -123,7 +123,7 @@ const EditPage = () => {
   // 3. Handle Update
   const handleUpdate = async () => {
     if (!title || !description || !code) {
-      alert("🚨 Title, description, and code are required.");
+      alert("Title, description, and code are required.");
       return;
     }
 
